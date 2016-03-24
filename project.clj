@@ -13,7 +13,11 @@
                  [reagent "0.5.1"]]
   
   :plugins [[lein-figwheel "0.5.0-6"]
-            [lein-cljsbuild "1.1.2" :exclusions [[org.clojure/clojure]]]]
+            [lein-cljsbuild "1.1.2" :exclusions [[org.clojure/clojure]]]
+            [lein-sassy "1.0.7"]]
+  
+  :sass {:src "resources/public/sass"
+          :dst "resources/public/css"}
 
   :source-paths ["src"]
 
