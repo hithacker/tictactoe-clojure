@@ -1,5 +1,6 @@
 (ns tictactoe.core
-  (:require [reagent.core :as reagent :refer [atom]]))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [clojure.core.matrix :as matrix]))
 
 (enable-console-print!)
 
@@ -20,11 +21,27 @@
     :p2
     :p1))
 
-(defn win? [turn]
+(defn win-column? [turn]
   (let [board (:board @app-state)]
-    (if (some true? (map (fn [seq] (every? #(= % turn) seq)) board))
-      true
-      false)))
+    (some true? (map (fn [seq] (every? #(= % turn) seq)) board))))
+
+(defn win-row? [turn]
+  (let [board (:board @app-state)
+        transposed-board (apply mapv vector board)]
+    (some true? (map (fn [seq] (every? #(= % turn) seq)) transposed-board))))
+
+(defn win-diagonal? [turn]
+  (let [diagonal-a (matrix/diagonal (:board @app-state))
+        diagonal-b (matrix/diagonal (apply vector (reverse (:board @app-state))))]
+    (do
+      (prn diagonal-a)
+      (prn diagonal-b)
+      (or
+       (every? #(= % turn) diagonal-a)
+       (every? #(= % turn) diagonal-b)))))
+
+(defn win? [turn]
+  (or (win-row? turn) (win-column? turn) (win-diagonal? turn)))
 
 (defn tictactoe []
   [:div
@@ -60,7 +77,7 @@
                                [:board i j]
                                (next-turn turn))
                         (if (win? (next-turn turn))
-                          (js/alert (str (turn) " wins")))))))}])))])
+                          (js/alert (str turn " wins")))))))}])))])
   
 (reagent/render-component [tictactoe]
                           (. js/document (getElementById "app")))
