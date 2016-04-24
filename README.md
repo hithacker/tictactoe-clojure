@@ -1,10 +1,10 @@
 # tictactoe
 
-FIXME: Write a one-line description of your library/project.
+Tic-tac-toe in ClojureScript. Right now it's a 2 player human vs human game. I am working on adding Computer AI using Minimax algorithm and later Alpha beta prunning.
 
 ## Overview
 
-FIXME: Write a paragraph about the library/project and highlight its goals.
+My first step towards going deeper in worlds of functional programming and AI.
 
 ## Setup
 
