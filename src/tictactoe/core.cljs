@@ -43,6 +43,35 @@
 (defn win? [turn]
   (or (win-row? turn) (win-column? turn) (win-diagonal? turn)))
 
+(defn positions-with-values 
+  [board] 
+  (flatten 
+   (map-indexed 
+    (fn [i m] 
+      (map-indexed 
+       (fn [j n] {:i i :j j :value n}) m)) board)))
+
+(defn empty-positions 
+  [board] 
+  (filter (fn [x] (= (:value x) 0)) (positions-with-values board)))
+
+(defn new-board
+  [board cell player]
+  (let 
+      [i (:i cell)
+       j (:j cell)]
+    (assoc-in board [i j] player)))
+
+(defn make-a-minimax-tree
+  [tree current-player]
+  (let [board (:value tree)
+        sub-nodes (vec (map (fn [cell] (new-board board cell current-player)) (empty-positions board)))
+        prev-player (if (= current-player 1) 2 1)]
+    (assoc 
+     tree 
+     :nodes 
+     (vec (map (fn [node] (make-a-minimax-tree {:value node} prev-player)) sub-nodes)))))
+
 (defn tictactoe []
   [:div
    [:h1 (:text @app-state)]
